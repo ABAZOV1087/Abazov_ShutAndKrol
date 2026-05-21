@@ -52,7 +52,7 @@ Title="Читай, Пиши и не спиши" Height="650" Width="1000"
 
                     </Button.ToolTip>
 
-                    <Image Source="/Images/author.png" Width="30" Height="30"/>
+                    <Image Source="https://i.pinimg.com/originals/c0/61/f5/c061f50d4794bed5afccc9bda4ce405b.png" Width="30" Height="30"/>
 
                 </Button>
 

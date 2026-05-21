@@ -6,9 +6,66 @@
       xmlns:local="clr-namespace:Abazov_ShutAndKrol.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ProfilePage">
+Title="Профиль" Loaded="Page_Loaded">
 
-    <Grid>
-        
+    <Grid Background="#F5F7FA">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#FFFFFF" Margin="20" Padding="25" CornerRadius="8">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15" Direction="270" Opacity="0.05" ShadowDepth="3"/>
+            </Border.Effect>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Личный кабинет" FontSize="22" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Center" Margin="0,0,0,25"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                    <TextBlock Text="Логин:" FontWeight="Bold" FontSize="14" Foreground="#7F8C8D" Width="130"/>
+                    <TextBlock x:Name="tblLogin" FontSize="14" Foreground="#2C3E50"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                    <TextBlock Text="Имя в системе:" FontWeight="Bold" FontSize="14" Foreground="#7F8C8D" Width="130"/>
+                    <TextBlock x:Name="tblDisplayName" FontSize="14" Foreground="#2C3E50"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                    <TextBlock Text="Email:" FontWeight="Bold" FontSize="14" Foreground="#7F8C8D" Width="130"/>
+                    <TextBlock x:Name="tblEmail" FontSize="14" Foreground="#2C3E50"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,25">
+                    <TextBlock Text="Роль:" FontWeight="Bold" FontSize="14" Foreground="#7F8C8D" Width="130"/>
+                    <TextBlock x:Name="tblRole" FontSize="14" Foreground="#2C3E50"/>
+                </StackPanel>
+
+                <Button x:Name="btnLogout" Content="Выйти из аккаунта" Height="40" Background="#E74C3C" Foreground="White" FontWeight="Bold" BorderBrush="Transparent" Click="btnLogout_Click"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Column="1" Background="#FFFFFF" Margin="20" Padding="25" CornerRadius="8">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15" Direction="270" Opacity="0.05" ShadowDepth="3"/>
+            </Border.Effect>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Ваша активность" FontSize="22" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Center" Margin="0,0,0,25"/>
+
+                <Border Background="#EBF5FB" Padding="15" CornerRadius="6" Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="Книг в ваших списках чтения:" FontSize="14" Foreground="#2980B9" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="tblBooksInListsCount" Text="0" FontSize="28" FontWeight="Bold" Foreground="#2980B9" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border x:Name="borderAuthorStats" Background="#EAF2F8" Padding="15" CornerRadius="6" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="Опубликовано вами произведений:" FontSize="14" Foreground="#27AE60" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="tblAuthorBooksCount" Text="0" FontSize="28" FontWeight="Bold" Foreground="#27AE60" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>

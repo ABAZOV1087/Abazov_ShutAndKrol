@@ -69,6 +69,12 @@ namespace Abazov_ShutAndKrol.Pages
             }
 
             lvBooks.ItemsSource = currentBooks.ToList();
+
+            // Если пользователь не админ, скрываем замороженные книги
+            if (Core.CurrentUser == null || Core.CurrentUser.RoleID != 3)
+            {
+                currentBooks = currentBooks.Where(b => b.IsFrozen == false).ToList();
+            }
         }
 
         private void tbSearch_TextChanged(object sender, TextChangedEventArgs e)

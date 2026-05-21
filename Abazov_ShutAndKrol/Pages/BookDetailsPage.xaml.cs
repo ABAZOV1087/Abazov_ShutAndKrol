@@ -44,6 +44,7 @@ namespace Abazov_ShutAndKrol.Pages
             statuses.Insert(0, new ReadingListStatuses { ID = 0, Name = "Не выбрано" });
             cbBookStatus.ItemsSource = statuses;
             cbBookStatus.DisplayMemberPath = "Name";
+            cbBookStatus.SelectedValuePath = "ID";
 
             if (Core.CurrentUser != null)
             {
@@ -56,6 +57,10 @@ namespace Abazov_ShutAndKrol.Pages
                 {
                     cbBookStatus.SelectedIndex = 0;
                 }
+            }
+            if (Core.CurrentUser != null && Core.CurrentUser.RoleID == 3)
+            {
+                btnAdminFreezeBook.Visibility = Visibility.Visible;
             }
         }
 
@@ -152,6 +157,80 @@ namespace Abazov_ShutAndKrol.Pages
             }
 
             Core.Context.SaveChanges();
+        }
+        private void btnComplainBook_Click(object sender, RoutedEventArgs e)
+        {
+            if (Core.CurrentUser == null)
+            {
+                MessageBox.Show("Необходимо авторизоваться для отправки жалобы.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            string reason = Microsoft.VisualBasic.Interaction.InputBox("Введите причину жалобы на книгу:", "Жалоба на произведение", "Нарушение авторских прав / Неприемлемый контент");
+
+            if (string.IsNullOrWhiteSpace(reason)) return;
+
+            Complaints newComplaint = new Complaints
+            {
+                SenderID = Core.CurrentUser.ID,
+                TargetBookID = _currentBook.ID,
+                TargetReviewID = null,
+                Reason = reason,
+                CreatedAt = DateTime.Now
+            };
+
+            Core.Context.Complaints.Add(newComplaint);
+            Core.Context.SaveChanges();
+
+            MessageBox.Show("Жалоба на книгу успешно отправлена администрации.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        // Обработчик жалобы на автора
+        private void btnComplainAuthor_Click(object sender, RoutedEventArgs e)
+        {
+            if (Core.CurrentUser == null)
+            {
+                MessageBox.Show("Необходимо авторизоваться для отправки жалобы.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            string reason = Microsoft.VisualBasic.Interaction.InputBox("Введите причину жалобы на автора:", "Жалоба на автора", "Оскорбительное поведение / Спам");
+
+            if (string.IsNullOrWhiteSpace(reason)) return;
+
+            // Жалоба привязывается к книге этого автора, чтобы админ понял, откуда пришёл сигнал
+            Complaints newComplaint = new Complaints
+            {
+                SenderID = Core.CurrentUser.ID,
+                TargetBookID = _currentBook.ID,
+                TargetReviewID = null,
+                Reason = $"[Жалоба на Автора]: {reason}",
+                CreatedAt = DateTime.Now
+            };
+
+            Core.Context.Complaints.Add(newComplaint);
+            Core.Context.SaveChanges();
+
+            MessageBox.Show("Жалоба на автора успешно отправлена администрации.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        // Обработчик быстрой заморозки книги администратором
+        private void btnAdminFreezeBook_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show($"Вы уверены, что хотите заморозить книгу '{_currentBook.Title}'?", "Подтверждение блокировки", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                var bookToFreeze = Core.Context.Books.FirstOrDefault(b => b.ID == _currentBook.ID);
+                if (bookToFreeze != null)
+                {
+                    bookToFreeze.IsFrozen = true;
+                    Core.Context.SaveChanges();
+
+                    MessageBox.Show("Книга успешно заморожена и скрыта из общего доступа.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    NavigationService.Navigate(new CatalogPage());
+                }
+            }
         }
     }
 }

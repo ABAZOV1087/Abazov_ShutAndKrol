@@ -6,9 +6,25 @@
       xmlns:local="clr-namespace:Abazov_ShutAndKrol.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="FreezeWarningPage">
+      Title="Предупреждение">
 
-    <Grid>
-        
+    <Grid Background="#FFFFFF">
+        <Border Background="#FDEDEC" BorderBrush="#E74C3C" BorderThickness="2" CornerRadius="8" Width="550" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="30">
+            <StackPanel HorizontalAlignment="Center">
+                <Image Source="https://remanga.org/media/posts/problem-s-prilozheniem--33554a78/attachment_0f6e9636.webp" Width="264" Height="151" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+
+                <TextBlock Text="Ваш аккаунт временно заморожен!" FontSize="22" FontWeight="Bold" Foreground="#C0392B" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+
+                <TextBlock Text="Администрация платформы 'ШутИКроль' наложила ограничения на ваш профиль в связи с нарушением правил публикации или получением жалоб от других пользователей." 
+                           FontSize="14" Foreground="#2C3E50" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,20"/>
+
+                <TextBlock Text="Что это означает:" FontSize="14" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                <TextBlock Text="• Вы не можете публиковать новые книги.&#x0a;• Вы не можете редактировать свои существующие книги.&#x0a;• Вам недоступно добавление новых отзывов и оценок." 
+                           FontSize="13" Foreground="#34495E" Margin="0,0,0,25"/>
+
+                <TextBlock Text="Для уточнения деталей или обжалования блокировки обратитесь в службу поддержки: support@shutikrol.ru" 
+                           FontSize="12" Foreground="#7F8C8D" TextWrapping="Wrap" TextAlignment="Center" FontWeight="SemiBold"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>

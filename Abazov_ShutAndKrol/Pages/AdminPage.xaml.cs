@@ -29,7 +29,23 @@ namespace Abazov_ShutAndKrol.Pages
 
         private void UpdateGrid()
         {
-            dgComplaints.ItemsSource = Core.Context.Complaints.ToList();
+            try
+            {
+                Core.Context.ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+
+                // 1. Загрузка жалоб
+                dgComplaints.ItemsSource = Core.Context.Complaints.ToList();
+
+                // 2. Загрузка только замороженных книг
+                dgFrozenBooks.ItemsSource = Core.Context.Books.Where(b => b.IsFrozen == true).ToList();
+
+                // 3. Загрузка только замороженных пользователей (кроме самого админа на всякий случай)
+                dgFrozenUsers.ItemsSource = Core.Context.Users.Where(u => u.IsFrozen == true).ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при обновлении данных модерации: {ex.Message}", "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btnReject_Click(object sender, RoutedEventArgs e)
@@ -37,15 +53,22 @@ namespace Abazov_ShutAndKrol.Pages
             var selectedComplaint = dgComplaints.SelectedItem as Complaints;
             if (selectedComplaint == null)
             {
-                MessageBox.Show("Выберите жалобу из списка.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Пожалуйста, выберите жалобу из списка.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            Core.Context.Complaints.Remove(selectedComplaint);
-            Core.Context.SaveChanges();
+            try
+            {
+                Core.Context.Complaints.Remove(selectedComplaint);
+                Core.Context.SaveChanges();
 
-            UpdateGrid();
-            MessageBox.Show("Жалоба отклонена и удалена из списка.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                UpdateGrid();
+                MessageBox.Show("Жалоба успешно отклонена и удалена из списка.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Не удалось отклонить жалобу: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btnFreezeBook_Click(object sender, RoutedEventArgs e)
@@ -53,27 +76,34 @@ namespace Abazov_ShutAndKrol.Pages
             var selectedComplaint = dgComplaints.SelectedItem as Complaints;
             if (selectedComplaint == null)
             {
-                MessageBox.Show("Выберите жалобу.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Пожалуйста, выберите жалобу из списка.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (selectedComplaint.TargetBookID == null)
             {
-                MessageBox.Show("Эта жалоба не связана с книгой.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Эта жалоба направлена не на книгу.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            int bookId = selectedComplaint.TargetBookID.Value;
-            var book = Core.Context.Books.FirstOrDefault(b => b.ID == bookId);
-
-            if (book != null)
+            try
             {
-                book.IsFrozen = true;
-                Core.Context.Complaints.Remove(selectedComplaint);
-                Core.Context.SaveChanges();
+                int bookId = Convert.ToInt32(selectedComplaint.TargetBookID);
+                var book = Core.Context.Books.FirstOrDefault(b => b.ID == bookId);
 
-                UpdateGrid();
-                MessageBox.Show("Книга успешно заморожена. Жалоба закрыта.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (book != null)
+                {
+                    book.IsFrozen = true;
+                    Core.Context.Complaints.Remove(selectedComplaint);
+                    Core.Context.SaveChanges();
+
+                    UpdateGrid();
+                    MessageBox.Show($"Книга '{book.Title}' успешно заморожена. Вы можете увидеть её на соседней вкладке.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при заморозке книги: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -82,43 +112,104 @@ namespace Abazov_ShutAndKrol.Pages
             var selectedComplaint = dgComplaints.SelectedItem as Complaints;
             if (selectedComplaint == null)
             {
-                MessageBox.Show("Выберите жалобу.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Пожалуйста, выберите жалобу из списка.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            Users userToFreeze = null;
-
-            if (selectedComplaint.TargetReviewID != null)
+            try
             {
-                int reviewId = selectedComplaint.TargetReviewID.Value;
-                var review = Core.Context.Reviews.FirstOrDefault(r => r.ID == reviewId);
-                if (review != null)
+                Users userToFreeze = null;
+
+                if (selectedComplaint.TargetReviewID != null)
                 {
-                    userToFreeze = Core.Context.Users.FirstOrDefault(u => u.ID == review.UserID);
+                    int reviewId = Convert.ToInt32(selectedComplaint.TargetReviewID);
+                    var review = Core.Context.Reviews.FirstOrDefault(r => r.ID == reviewId);
+                    if (review != null)
+                    {
+                        int userId = Convert.ToInt32(review.UserID);
+                        userToFreeze = Core.Context.Users.FirstOrDefault(u => u.ID == userId);
+                    }
+                }
+                else if (selectedComplaint.TargetBookID != null)
+                {
+                    int bookId = Convert.ToInt32(selectedComplaint.TargetBookID);
+                    var book = Core.Context.Books.FirstOrDefault(b => b.ID == bookId);
+                    if (book != null)
+                    {
+                        int authorId = Convert.ToInt32(book.AuthorID);
+                        userToFreeze = Core.Context.Users.FirstOrDefault(u => u.ID == authorId);
+                    }
+                }
+
+                if (userToFreeze != null)
+                {
+                    userToFreeze.IsFrozen = true;
+                    Core.Context.Complaints.Remove(selectedComplaint);
+                    Core.Context.SaveChanges();
+
+                    UpdateGrid();
+                    MessageBox.Show($"Пользователь {userToFreeze.Login} успешно заморожен. История находится во вкладке пользователей.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
-            else if (selectedComplaint.TargetBookID != null)
+            catch (Exception ex)
             {
-                int bookId = selectedComplaint.TargetBookID.Value;
-                var book = Core.Context.Books.FirstOrDefault(b => b.ID == bookId);
+                MessageBox.Show($"Ошибка при заморозке пользователя: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Логика РАЗМОРОЗКИ книги
+        private void btnUnfreezeBook_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedBook = dgFrozenBooks.SelectedItem as Books;
+            if (selectedBook == null)
+            {
+                MessageBox.Show("Выберите замороженную книгу для разблокировки.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                var book = Core.Context.Books.FirstOrDefault(b => b.ID == selectedBook.ID);
                 if (book != null)
                 {
-                    userToFreeze = Core.Context.Users.FirstOrDefault(u => u.ID == book.AuthorID);
+                    book.IsFrozen = false;
+                    Core.Context.SaveChanges();
+
+                    UpdateGrid();
+                    MessageBox.Show($"Книга '{book.Title}' успешно разморожена и снова доступна в каталоге!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
-
-            if (userToFreeze != null)
+            catch (Exception ex)
             {
-                userToFreeze.IsFrozen = true;
-                Core.Context.Complaints.Remove(selectedComplaint);
-                Core.Context.SaveChanges();
-
-                UpdateGrid();
-                MessageBox.Show($"Пользователь {userToFreeze.Login} успешно заморожен. Жалоба закрыта.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Не удалось разморозить книгу: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            else
+        }
+
+        // Логика РАЗБЛОКИРОВКИ пользователя
+        private void btnUnfreezeUser_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedUser = dgFrozenUsers.SelectedItem as Users;
+            if (selectedUser == null)
             {
-                MessageBox.Show("Не удалось определить нарушителя.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Выберите пользователя для разблокировки.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                var user = Core.Context.Users.FirstOrDefault(u => u.ID == selectedUser.ID);
+                if (user != null)
+                {
+                    user.IsFrozen = false;
+                    Core.Context.SaveChanges();
+
+                    UpdateGrid();
+                    MessageBox.Show($"Пользователь {user.Login} успешно разблокирован. Все ограничения сняты.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Не удалось разблокировать пользователя: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
