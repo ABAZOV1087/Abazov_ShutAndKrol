@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="0f851b07470f41e5bae2b28b1029d662" Name="Diagram1" ZoomLevel="45">
+      <Diagram DiagramId="0f851b07470f41e5bae2b28b1029d662" Name="Diagram1" ZoomLevel="57">
         <EntityTypeShape EntityType="ShutAndKrolModel.Books" Width="1.5" PointX="5.25" PointY="7.375" IsExpanded="true" />
         <EntityTypeShape EntityType="ShutAndKrolModel.Complaints" Width="1.5" PointX="7.5" PointY="7.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ShutAndKrolModel.Genres" Width="1.5" PointX="7.5" PointY="11.75" IsExpanded="true" />
@@ -31,8 +31,8 @@
         <AssociationConnector Association="ShutAndKrolModel.BookGenres" ManuallyRouted="false" />
         <EntityTypeShape EntityType="ShutAndKrolModel.View_ActiveAuthors" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="ShutAndKrolModel.View_PopularBooks" Width="1.5" PointX="2.75" PointY="0.75" />
-        <EntityTypeShape EntityType="ShutAndKrolModel.View_ProblemContent" Width="1.5" PointX="0.75" PointY="3.75" />
-        <EntityTypeShape EntityType="ShutAndKrolModel.View_ReviewComplaints" Width="1.5" PointX="2.875" PointY="3.875" />
+        <EntityTypeShape EntityType="ShutAndKrolModel.View_ProblemContent" Width="1.5" PointX="10" PointY="0.625" />
+        <EntityTypeShape EntityType="ShutAndKrolModel.View_ReviewComplaints" Width="1.5" PointX="7.375" PointY="0.75" />
         <EntityTypeShape EntityType="ShutAndKrolModel.View_UserStatistics" Width="1.5" PointX="4.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>

@@ -185,7 +185,7 @@ namespace Abazov_ShutAndKrol.Pages
             MessageBox.Show("Жалоба на книгу успешно отправлена администрации.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        // Обработчик жалобы на автора
+
         private void btnComplainAuthor_Click(object sender, RoutedEventArgs e)
         {
             if (Core.CurrentUser == null)
@@ -198,7 +198,7 @@ namespace Abazov_ShutAndKrol.Pages
 
             if (string.IsNullOrWhiteSpace(reason)) return;
 
-            // Жалоба привязывается к книге этого автора, чтобы админ понял, откуда пришёл сигнал
+
             Complaints newComplaint = new Complaints
             {
                 SenderID = Core.CurrentUser.ID,
@@ -214,7 +214,7 @@ namespace Abazov_ShutAndKrol.Pages
             MessageBox.Show("Жалоба на автора успешно отправлена администрации.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        // Обработчик быстрой заморозки книги администратором
+
         private void btnAdminFreezeBook_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show($"Вы уверены, что хотите заморозить книгу '{_currentBook.Title}'?", "Подтверждение блокировки", MessageBoxButton.YesNo, MessageBoxImage.Warning);

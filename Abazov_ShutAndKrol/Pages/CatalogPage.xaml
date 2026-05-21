@@ -23,6 +23,8 @@
                 <ComboBoxItem Content="Без сортировки"/>
                 <ComboBoxItem Content="По алфавиту (А-Я)"/>
                 <ComboBoxItem Content="По алфавиту (Я-А)"/>
+                <ComboBoxItem Content="По оценке (высшая)"/>
+                <ComboBoxItem Content="По оценке (низшая)"/>
             </ComboBox>
 
             <TextBlock Text="Жанр:" VerticalAlignment="Center" Margin="15,0,5,0"/>
@@ -38,7 +40,14 @@
 
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="5" Margin="10" Width="160" Height="240" Background="#FAFAFA">
+                    <Border Background="White" Margin="10" CornerRadius="8" Width="180" Height="280">
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Добавить в 'Хочу прочитать'" Click="MenuWantToRead_Click"/>
+                                <MenuItem Header="Добавить в 'Читаю'" Click="MenuReadingNow_Click"/>
+                                <MenuItem Header="Добавить в 'Прочитано'" Click="MenuRead_Click"/>
+                            </ContextMenu>
+                        </Border.ContextMenu>
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>

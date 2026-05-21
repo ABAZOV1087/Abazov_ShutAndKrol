@@ -33,13 +33,10 @@ namespace Abazov_ShutAndKrol.Pages
             {
                 Core.Context.ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
 
-                // 1. Загрузка жалоб
                 dgComplaints.ItemsSource = Core.Context.Complaints.ToList();
 
-                // 2. Загрузка только замороженных книг
                 dgFrozenBooks.ItemsSource = Core.Context.Books.Where(b => b.IsFrozen == true).ToList();
 
-                // 3. Загрузка только замороженных пользователей (кроме самого админа на всякий случай)
                 dgFrozenUsers.ItemsSource = Core.Context.Users.Where(u => u.IsFrozen == true).ToList();
             }
             catch (Exception ex)
@@ -157,7 +154,6 @@ namespace Abazov_ShutAndKrol.Pages
             }
         }
 
-        // Логика РАЗМОРОЗКИ книги
         private void btnUnfreezeBook_Click(object sender, RoutedEventArgs e)
         {
             var selectedBook = dgFrozenBooks.SelectedItem as Books;
@@ -185,7 +181,6 @@ namespace Abazov_ShutAndKrol.Pages
             }
         }
 
-        // Логика РАЗБЛОКИРОВКИ пользователя
         private void btnUnfreezeUser_Click(object sender, RoutedEventArgs e)
         {
             var selectedUser = dgFrozenUsers.SelectedItem as Users;

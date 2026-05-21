@@ -70,7 +70,6 @@ namespace Abazov_ShutAndKrol.Pages
 
             lvBooks.ItemsSource = currentBooks.ToList();
 
-            // Если пользователь не админ, скрываем замороженные книги
             if (Core.CurrentUser == null || Core.CurrentUser.RoleID != 3)
             {
                 currentBooks = currentBooks.Where(b => b.IsFrozen == false).ToList();
@@ -98,6 +97,61 @@ namespace Abazov_ShutAndKrol.Pages
             {
                 NavigationService.Navigate(new BookDetailsPage(selectedBook));
             }
+        }
+        private void ChangeBookStatusFromCatalog(object sender, int statusId)
+        {
+            if (Core.CurrentUser == null)
+            {
+                MessageBox.Show("Авторизуйтесь для добавления книг в списки.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var menuItem = sender as MenuItem;
+            if (menuItem == null) return;
+
+            var contextMenu = menuItem.Parent as ContextMenu;
+            if (contextMenu == null) return;
+
+            var border = contextMenu.PlacementTarget as Border;
+            if (border == null) return;
+
+            var selectedBook = border.DataContext as Books;
+            if (selectedBook == null) return;
+
+            var existingRecord = Core.Context.ReadingLists.FirstOrDefault(rl => rl.UserID == Core.CurrentUser.ID && rl.BookID == selectedBook.ID);
+
+            if (existingRecord != null)
+            {
+                existingRecord.StatusID = statusId;
+            }
+            else
+            {
+                ReadingLists newRecord = new ReadingLists
+                {
+                    UserID = Core.CurrentUser.ID,
+                    BookID = selectedBook.ID,
+                    StatusID = statusId
+                };
+                Core.Context.ReadingLists.Add(newRecord);
+            }
+
+            Core.Context.SaveChanges();
+            MessageBox.Show("Статус книги успешно обновлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void MenuWantToRead_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeBookStatusFromCatalog(sender, 1);
+        }
+
+        private void MenuReadingNow_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeBookStatusFromCatalog(sender, 2);
+        }
+
+        private void MenuRead_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeBookStatusFromCatalog(sender, 3);
         }
     }
 }
