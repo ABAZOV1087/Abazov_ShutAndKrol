@@ -1,0 +1,53 @@
+﻿<Window x:Class="Abazov_ShutAndKrol.Pages.AddEditBookWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Abazov_ShutAndKrol.Pages"
+        mc:Ignorable="d"
+Title="Управление книгой" Height="500" Width="500" WindowStartupLocation="CenterScreen">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,10">
+            <TextBlock Text="Название книги:" Margin="0,0,0,5"/>
+            <TextBox x:Name="tbTitle" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Margin="0,0,0,10">
+            <TextBlock Text="Ссылка на обложку (или путь):" Margin="0,0,0,5"/>
+            <TextBox x:Name="tbCoverPath" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <Grid Grid.Row="2" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Краткое описание:" Margin="0,0,0,5"/>
+                <TextBox x:Name="tbDescription" Height="60" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="0,0,0,15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Текст произведения:" Margin="0,0,0,5"/>
+            <TextBox x:Name="tbTextContent" Grid.Row="1" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto"/>
+        </Grid>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="btnCancel" Content="Отмена" Width="100" Height="30" Click="btnCancel_Click" Background="#E74C3C" Foreground="White" BorderBrush="Transparent" Margin="0,0,10,0"/>
+            <Button x:Name="btnSave" Content="Сохранить" Width="100" Height="30" Click="btnSave_Click" Background="#2ECC71" Foreground="White" BorderBrush="Transparent" FontWeight="Bold"/>
+        </StackPanel>
+    </Grid>
+</Window>

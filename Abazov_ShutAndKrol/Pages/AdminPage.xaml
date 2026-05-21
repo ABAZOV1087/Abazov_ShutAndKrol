@@ -1,0 +1,37 @@
+﻿<Page x:Class="Abazov_ShutAndKrol.Pages.AdminPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Abazov_ShutAndKrol.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Панель администратора" Loaded="Page_Loaded">
+
+    <Grid Background="#FFFFFF" Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Модерация жалоб" FontSize="22" FontWeight="Bold" Margin="0,0,0,15"/>
+
+        <DataGrid x:Name="dgComplaints" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="50"/>
+                <DataGridTextColumn Header="Отправитель (ID)" Binding="{Binding SenderID}" Width="100"/>
+                <DataGridTextColumn Header="ID Книги" Binding="{Binding TargetBookID}" Width="100"/>
+                <DataGridTextColumn Header="ID Отзыва" Binding="{Binding TargetReviewID}" Width="100"/>
+                <DataGridTextColumn Header="Причина" Binding="{Binding Reason}" Width="2*"/>
+                <DataGridTextColumn Header="Дата" Binding="{Binding CreatedAt, StringFormat=\{0:dd.MM.yyyy HH:mm\}}" Width="130"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button x:Name="btnReject" Content="Отклонить жалобу" Width="150" Height="35" Click="btnReject_Click" Background="#7F8C8D" Foreground="White" BorderBrush="Transparent" Margin="0,0,10,0"/>
+            <Button x:Name="btnFreezeBook" Content="Заморозить книгу" Width="150" Height="35" Click="btnFreezeBook_Click" Background="#E67E22" Foreground="White" BorderBrush="Transparent" Margin="0,0,10,0"/>
+            <Button x:Name="btnFreezeUser" Content="Заморозить автора/юзера" Width="180" Height="35" Click="btnFreezeUser_Click" Background="#E74C3C" Foreground="White" BorderBrush="Transparent" FontWeight="Bold"/>
+        </StackPanel>
+    </Grid>
+</Page>
