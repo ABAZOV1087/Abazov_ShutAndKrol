@@ -24,6 +24,12 @@ namespace Abazov_ShutAndKrol.Pages
             InitializeComponent();
             _currentBook = selectedBook;
             DataContext = _currentBook;
+            if (Core.CurrentUser.IsFrozen)
+            {
+                btnSendReview.IsEnabled = false;
+                btnComplainAuthor.IsEnabled = false;
+                btnComplainBook.IsEnabled = false;
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -232,5 +238,6 @@ namespace Abazov_ShutAndKrol.Pages
                 }
             }
         }
+
     }
 }
