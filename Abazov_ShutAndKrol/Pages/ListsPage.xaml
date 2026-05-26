@@ -16,7 +16,10 @@
 
         <WrapPanel Grid.Row="0" Margin="15" VerticalAlignment="Center">
             <TextBlock Text="Категория списка:" VerticalAlignment="Center" FontSize="14" Margin="0,0,10,0"/>
-            <ComboBox x:Name="cbListFilter" Width="200" Height="30" SelectionChanged="cbListFilter_SelectionChanged"/>
+            <ComboBox x:Name="cbListFilter" 
+          DisplayMemberPath="Name" 
+          SelectedValuePath="ID" 
+          SelectionChanged="cbListFilter_SelectionChanged"/>
         </WrapPanel>
 
         <ListView x:Name="lvUserBooks" Grid.Row="1" Margin="10" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="lvUserBooks_MouseDoubleClick">

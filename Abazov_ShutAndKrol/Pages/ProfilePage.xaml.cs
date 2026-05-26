@@ -45,6 +45,12 @@ namespace Abazov_ShutAndKrol.Pages
                 int authorBooksCount = Core.Context.Books.Count(b => b.AuthorID == Core.CurrentUser.ID);
                 tblAuthorBooksCount.Text = authorBooksCount.ToString();
             }
+            if (Core.CurrentUser == null) return;
+
+            if (Core.CurrentUser.RoleID != 1)
+            {
+                btnRequestAuthor.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void btnLogout_Click(object sender, RoutedEventArgs e)
@@ -60,6 +66,43 @@ namespace Abazov_ShutAndKrol.Pages
                 mainWindow.btnFreezeWarning.Visibility = Visibility.Collapsed;
                 mainWindow.MainFrame.Navigate(new LoginPage());
             }
+        }
+        private void btnRequestAuthor_Click(object sender, RoutedEventArgs e)
+        {
+            string portfolio = Microsoft.VisualBasic.Interaction.InputBox("Укажите ссылки на ваши публикации или кратко опишите ваше творчество:", "Заявка на статус автора");
+            if (string.IsNullOrWhiteSpace(portfolio)) return;
+
+            Complaints authorRequest = new Complaints
+            {
+                SenderID = Core.CurrentUser.ID,
+                TargetBookID = null,
+                TargetReviewID = null,
+                Reason = $"[ЗАЯВКА В АВТОРЫ] {portfolio}",
+                CreatedAt = DateTime.Now
+            };
+
+            Core.Context.Complaints.Add(authorRequest);
+            Core.Context.SaveChanges();
+            MessageBox.Show("Ваша заявка успешно отправлена на рассмотрение администрации!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void btnUnfreezeRequest_Click(object sender, RoutedEventArgs e)
+        {
+            string appealMessage = Microsoft.VisualBasic.Interaction.InputBox("Опишите подробно причину, по которой администратор должен разблокировать ваш профиль/контент:", "Апелляция на разморозку");
+            if (string.IsNullOrWhiteSpace(appealMessage)) return;
+
+            Complaints unfreezeAppeal = new Complaints
+            {
+                SenderID = Core.CurrentUser.ID,
+                TargetBookID = null,
+                TargetReviewID = null,
+                Reason = $"[АПЕЛЛЯЦИЯ НА РАЗМОРОЗКУ] {appealMessage}",
+                CreatedAt = DateTime.Now
+            };
+
+            Core.Context.Complaints.Add(unfreezeAppeal);
+            Core.Context.SaveChanges();
+            MessageBox.Show("Ваша заявка на разморозку успешно отправлена и находится на рассмотрении администрации.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

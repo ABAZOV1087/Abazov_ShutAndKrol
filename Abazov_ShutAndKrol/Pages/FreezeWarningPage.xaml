@@ -23,7 +23,9 @@
                            FontSize="13" Foreground="#34495E" Margin="0,0,0,25"/>
 
                 <TextBlock Text="Для уточнения деталей или обжалования блокировки обратитесь в службу поддержки: support@shutikrol.ru" 
-                           FontSize="12" Foreground="#7F8C8D" TextWrapping="Wrap" TextAlignment="Center" FontWeight="SemiBold"/>
+                           FontSize="12" Foreground="#7F8C8D" TextWrapping="Wrap" TextAlignment="Center" FontWeight="SemiBold" Margin="0,0,0,15"/>
+
+                <Button x:Name="btnUnfreezeRequest" Content="Подать заявку на разморозку" Click="btnUnfreezeRequest_Click" Width="240" Height="35" Background="#E74C3C" Foreground="White" FontWeight="Bold" BorderBrush="Transparent" Cursor="Hand"/>
             </StackPanel>
         </Border>
     </Grid>

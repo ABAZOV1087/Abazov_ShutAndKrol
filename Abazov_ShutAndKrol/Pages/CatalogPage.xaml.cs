@@ -41,39 +41,37 @@ namespace Abazov_ShutAndKrol.Pages
 
         private void UpdateBooks()
         {
-            var currentBooks = _allBooks.AsEnumerable();
+            var currentBooks = Core.Context.Books.Where(b => b.IsFrozen == false).ToList();
 
             if (!string.IsNullOrWhiteSpace(tbSearch.Text))
             {
-                string search = tbSearch.Text.ToLower();
-                currentBooks = currentBooks.Where(b => b.Title.ToLower().Contains(search) ||
-                                                       (b.Users != null && b.Users.DisplayName.ToLower().Contains(search)));
+                currentBooks = currentBooks.Where(b => b.Title.ToLower().Contains(tbSearch.Text.ToLower()) || b.Users.DisplayName.ToLower().Contains(tbSearch.Text.ToLower())).ToList();
             }
 
-            if (cbGenre.SelectedIndex > 0)
+            if (cbGenre.SelectedIndex > 0 && cbGenre.SelectedValue != null)
             {
-                var selectedGenre = cbGenre.SelectedItem as Genres;
-                if (selectedGenre != null)
-                {
-                    currentBooks = currentBooks.Where(b => b.Genres.Any(g => g.ID == selectedGenre.ID));
-                }
+                int selectedGenreId = Convert.ToInt32(cbGenre.SelectedValue);
+                currentBooks = currentBooks.Where(b => b.AuthorID == selectedGenreId).ToList();
             }
 
-            if (cbSort.SelectedIndex == 1)
+            if (cbSort.SelectedIndex == 0)
             {
-                currentBooks = currentBooks.OrderBy(b => b.Title);
+                currentBooks = currentBooks.OrderBy(b => b.Title).ToList();
+            }
+            else if (cbSort.SelectedIndex == 1)
+            {
+                currentBooks = currentBooks.OrderByDescending(b => b.Title).ToList();
             }
             else if (cbSort.SelectedIndex == 2)
             {
-                currentBooks = currentBooks.OrderByDescending(b => b.Title);
+                currentBooks = currentBooks.OrderByDescending(b => Core.Context.Reviews.Where(r => r.BookID == b.ID).Select(r => (double?)r.Rating).DefaultIfEmpty(0).Average()).ToList();
             }
-
-            lvBooks.ItemsSource = currentBooks.ToList();
-
-            if (Core.CurrentUser == null || Core.CurrentUser.RoleID != 3)
+            else if (cbSort.SelectedIndex == 3)
             {
-                currentBooks = currentBooks.Where(b => b.IsFrozen == false).ToList();
+                currentBooks = currentBooks.OrderBy(b => Core.Context.Reviews.Where(r => r.BookID == b.ID).Select(r => (double?)r.Rating).DefaultIfEmpty(0).Average()).ToList();
             }
+
+            lvBooks.ItemsSource = currentBooks;
         }
 
         private void tbSearch_TextChanged(object sender, TextChangedEventArgs e)

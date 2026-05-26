@@ -30,6 +30,7 @@
                     </DataGrid>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                        <Button x:Name="btnApproveAuthor" Content="Назначить автором" Click="btnApproveAuthor_Click" Width="180" Height="35" Background="#2ECC71" Foreground="White" FontWeight="Bold" BorderBrush="Transparent" Margin="0,0,10,0"/>
                         <Button x:Name="btnReject" Content="Отклонить жалобу" Width="150" Height="35" Background="#95A5A6" Foreground="White" BorderBrush="Transparent" Click="btnReject_Click" Margin="0,0,10,0"/>
                         <Button x:Name="btnFreezeBook" Content="🔒 Заморозить книгу" Width="160" Height="35" Background="#E67E22" Foreground="White" BorderBrush="Transparent" Click="btnFreezeBook_Click" Margin="0,0,10,0"/>
                         <Button x:Name="btnFreezeUser" Content="🚫 Заморозить автора" Width="160" Height="35" Background="#C0392B" Foreground="White" BorderBrush="Transparent" Click="btnFreezeUser_Click"/>

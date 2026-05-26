@@ -73,7 +73,7 @@ namespace Abazov_ShutAndKrol.Pages
         private void UpdateReviewsAndRating()
         {
             var reviews = Core.Context.Reviews.Where(r => r.BookID == _currentBook.ID).ToList();
-            lvReviews.ItemsSource = reviews;
+            lbReviews.ItemsSource = reviews;
 
             if (reviews.Count > 0)
             {
@@ -238,6 +238,33 @@ namespace Abazov_ShutAndKrol.Pages
                 }
             }
         }
+        private void btnComplainReview_Click(object sender, RoutedEventArgs e)
+        {
+            if (Core.CurrentUser == null)
+            {
+                MessageBox.Show("Авторизуйтесь в системе, чтобы оставить жалобу.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
+            var button = sender as Button;
+            var review = button?.DataContext as Reviews;
+            if (review == null) return;
+
+            string reason = Microsoft.VisualBasic.Interaction.InputBox("Введите причину жалобы на данный отзыв:", "Жалоба на отзыв", "Спам / Нецензурная лексика");
+            if (string.IsNullOrWhiteSpace(reason)) return;
+
+            Complaints newComplaint = new Complaints
+            {
+                SenderID = Core.CurrentUser.ID,
+                TargetBookID = null,
+                TargetReviewID = review.ID,
+                Reason = reason,
+                CreatedAt = DateTime.Now
+            };
+
+            Core.Context.Complaints.Add(newComplaint);
+            Core.Context.SaveChanges();
+            MessageBox.Show("Жалоба на отзыв успешно отправлена на рассмотрение модераторам.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 }

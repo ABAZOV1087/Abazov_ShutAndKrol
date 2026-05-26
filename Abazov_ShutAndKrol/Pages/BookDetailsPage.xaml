@@ -80,25 +80,34 @@
                     </Grid>
                 </Border>
 
-                <ListView x:Name="lvReviews" d:ItemsSource="{d:SampleData ItemCount=2}">
-                    <ListView.ItemTemplate>
+                <ListBox x:Name="lbReviews" Background="Transparent" BorderBrush="Transparent">
+                    <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="10" Width="800">
-                                <StackPanel>
-                                    <Grid>
-                                        <TextBlock Text="{Binding Users.DisplayName}" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left"/>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <TextBlock Text="Оценка: " Foreground="Gray"/>
+                            <Border Background="White" Margin="0,5" Padding="15" CornerRadius="6" Width="820">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="5" Direction="270" Opacity="0.05" ShadowDepth="1"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0">
+                                        <WrapPanel Margin="0,0,0,5">
+                                            <TextBlock Text="{Binding Users.DisplayName}" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,15,0"/>
+                                            <TextBlock Text="Оценка: " Foreground="#F1C40F"/>
                                             <TextBlock Text="{Binding Rating}" FontWeight="Bold" Foreground="#F1C40F"/>
-                                        </StackPanel>
-                                    </Grid>
-                                    <TextBlock Text="{Binding Text}" FontSize="13" TextWrapping="Wrap" Margin="0,5,0,5"/>
-                                    <TextBlock Text="{Binding CreatedAt, StringFormat=\{0:dd.MM.yyyy HH:mm\}}" FontSize="11" Foreground="LightGray" HorizontalAlignment="Left"/>
-                                </StackPanel>
+                                        </WrapPanel>
+                                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Foreground="#34495E" FontSize="13"/>
+                                    </StackPanel>
+
+                                    <Button Grid.Column="1" Content="Пожаловаться на отзыв" Click="btnComplainReview_Click" Background="Transparent" BorderBrush="Transparent" Foreground="#E74C3C" Cursor="Hand" FontSize="11" VerticalAlignment="Top"/>
+                                </Grid>
                             </Border>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </StackPanel>
         </Grid>
     </ScrollViewer>

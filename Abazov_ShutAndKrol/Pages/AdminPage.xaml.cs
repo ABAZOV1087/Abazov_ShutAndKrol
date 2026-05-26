@@ -207,5 +207,63 @@ namespace Abazov_ShutAndKrol.Pages
                 MessageBox.Show($"Не удалось разблокировать пользователя: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        private void btnApproveAuthor_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedComplaint = dgComplaints.SelectedItem as Complaints;
+            if (selectedComplaint == null)
+            {
+                MessageBox.Show("Выберите заявку из списка.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (selectedComplaint.Reason == null || !selectedComplaint.Reason.StartsWith("[ЗАЯВКА В АВТОРЫ]"))
+            {
+                MessageBox.Show("Выбранная запись не является заявкой на статус автора.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var targetUser = Core.Context.Users.FirstOrDefault(u => u.ID == selectedComplaint.SenderID);
+            if (targetUser != null)
+            {
+                targetUser.RoleID = 2;
+                Core.Context.Complaints.Remove(selectedComplaint);
+                Core.Context.SaveChanges();
+
+                UpdateComplaints();
+                MessageBox.Show($"Пользователь {targetUser.DisplayName} успешно назначен автором платформы!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+        private void UpdateComplaints()
+        {
+            Core.Context.ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+            var reviewComplaints = Core.Context.Complaints.Where(c => c.TargetReviewID != null).ToList();
+            dgComplaints.ItemsSource = reviewComplaints;
+        }
+        private void btnApproveUnfreeze_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedComplaint = dgComplaints.SelectedItem as Complaints;
+            if (selectedComplaint == null)
+            {
+                MessageBox.Show("Выберите запись из списка.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (selectedComplaint.Reason == null || !selectedComplaint.Reason.StartsWith("[АПЕЛЛЯЦИЯ НА РАЗМОРОЗКУ]"))
+            {
+                MessageBox.Show("Выбранная запись не является апелляцией на разморозку.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var targetUser = Core.Context.Users.FirstOrDefault(u => u.ID == selectedComplaint.SenderID);
+            if (targetUser != null)
+            {
+                targetUser.IsFrozen = false;
+                Core.Context.Complaints.Remove(selectedComplaint);
+                Core.Context.SaveChanges();
+
+                UpdateComplaints();
+                MessageBox.Show($"Пользователь {targetUser.DisplayName} успешно разморожен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
     }
 }

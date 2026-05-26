@@ -40,9 +40,10 @@ Title="Профиль" Loaded="Page_Loaded">
                     <TextBlock Text="Роль:" FontWeight="Bold" FontSize="14" Foreground="#7F8C8D" Width="130"/>
                     <TextBlock x:Name="tblRole" FontSize="14" Foreground="#2C3E50"/>
                 </StackPanel>
-
                 <Button x:Name="btnLogout" Content="Выйти из аккаунта" Height="40" Background="#E74C3C" Foreground="White" FontWeight="Bold" BorderBrush="Transparent" Click="btnLogout_Click"/>
-            </StackPanel>
+                <Button x:Name="btnRequestAuthor" Content="Стать автором платформы" Click="btnRequestAuthor_Click" Width="220" Height="35" Background="#3498DB" Foreground="White" FontWeight="Bold" BorderBrush="Transparent"/>
+                </StackPanel>
+                
         </Border>
 
         <Border Grid.Column="1" Background="#FFFFFF" Margin="20" Padding="25" CornerRadius="8">
